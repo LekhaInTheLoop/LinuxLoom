@@ -228,5 +228,5 @@ $ ./bin/job-cli
 ---
 
 ## Conclusion
-
-This design uses Linux cgroups to control resources, providing a strong and secure way to manage and run jobs. It includes features like real-time monitoring, secure communication, and enforcing resource limits, making the system efficient and reliable for job execution.
+This design leverages gRPC to efficiently manage job execution, using protobuf for query transmission instead of the traditional JSON format. By incorporating Linux cgroups, the system ensures robust resource control, limiting CPU, memory, and disk I/O for each job. It also includes secure communication via TLS 1.3 and mutual authentication with X.509 certificates. Additionally, gRPC interceptors are utilized to enforce role-based access control (RBAC), ensuring only authorized users can access specific API methods.
+This comprehensive approach makes the system secure, efficient, and reliable for executing jobs with real-time monitoring and strong resource management.
