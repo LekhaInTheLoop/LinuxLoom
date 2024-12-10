@@ -7,9 +7,14 @@ A Prototype job worker service that provides an API to run arbitrary Linux proce
 
 ### Library
 
+Hello 
+
 The Job Worker is a flexible Golang package that helps run and manage Jobs on Linux systems. It handles starting, stopping, querying and streaming output from processes, as well as catching errors if any.
+
 The Worker keeps track of process statuses in memory using a local map, so it can update the status when a job finishes. But this data is temporary and will be lost if the Worker crashes or restarts, since it doesn’t store job state permanently.
+
 As part of its functionality, the Worker will expose an API to stream the output of a specific job, allowing users to fetch the logs in real-time using a job ID. The process output (stdout/stderr) is also saved as log files on the disk for future reference. However, over time, these log files can take up significant disk space, which could cause the system to crash if the disk runs out of space.
+
 To manage log file growth and avoid running out of disk space, we can implement solutions like log rotation, establish a log purging policy, or store logs in a distributed system such as Amazon S3. Currently, logs are stored in the /tmp directory, but this location can be customized through the configuration file.
 
 ```golang
