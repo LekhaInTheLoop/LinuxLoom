@@ -7,9 +7,10 @@ A Prototype job worker service that provides an API to run arbitrary Linux proce
 
 ### Library
 
-The library (Worker) is a reusable Golang package that interacts with Linux OS to execute arbitrary processes (Jobs). The Worker is responsible for the business logic to start, stop processes, stream the process output, and handle process errors.
-The Worker will keep the process status in memory, in a local map, to update the process status when it's finished. Once the Job state is not persistent, the Worker will lose the data if the Worker goes down.
-Most of the time, the users want to see the full log content to check if the job performs as expected, doing another API call to stream the output. The Worker should write the process output (stderr/stdout) on the disk as a log file. On the other hand, the old log files consume disk space which can crash the system when no more space is left. To address it, we can implement a log rotation, purge policy, or use a distributed file system (like Amazon S3) to keep the system healthy. For now the logs will be stored under the /tmp folder, but the log folder should be parameterized in the configuration file. 
+The Job Worker is a flexible Golang package that helps run and manage Jobs on Linux systems. It handles starting, stopping, querying and streaming output from processes, as well as catching errors if any.
+The Worker keeps track of process statuses in memory using a local map, so it can update the status when a job finishes. But this data is temporary and will be lost if the Worker crashes or restarts, since it doesn’t store job state permanently.
+As part of its functionality, the Worker will expose an API to stream the output of a specific job, allowing users to fetch the logs in real-time using a job ID. The process output (stdout/stderr) is also saved as log files on the disk for future reference. However, over time, these log files can take up significant disk space, which could cause the system to crash if the disk runs out of space.
+To manage log file growth and avoid running out of disk space, we can implement solutions like log rotation, establish a log purging policy, or store logs in a distributed system such as Amazon S3. Currently, logs are stored in the /tmp directory, but this location can be customized through the configuration file.
 
 ```golang
 // Command is a job request with the program name and arguments.
