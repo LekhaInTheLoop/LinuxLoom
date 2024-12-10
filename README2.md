@@ -1,10 +1,6 @@
-Here’s the updated design document with the name changed to "A Prototype Job Worker Service" and corresponding adjustments to match this name:
-
----
-
 # A Prototype Job Worker Service
 
-A streamlined and secure solution for managing and executing jobs with advanced resource control, secure communication, and user-friendly tools.
+A simple and secure solution for managing and running jobs, with strong control over resources, secure communication, and an easy-to-use interface
 
 ---
 
@@ -205,4 +201,4 @@ $ ./bin/job-cli
 
 ## Conclusion
 
-This design incorporates resource control using Linux cgroups, offering a robust and secure framework for managing and executing jobs. With features like real-time monitoring, secure communication, and resource enforcement, the system is tailored for efficient and reliable job execution.
+This design uses Linux cgroups to control resources, providing a strong and secure way to manage and run jobs. It includes features like real-time monitoring, secure communication, and enforcing resource limits, making the system efficient and reliable for job execution.
