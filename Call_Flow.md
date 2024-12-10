@@ -118,3 +118,79 @@ Throughout all call flows:
   - API endpoints are protected using role-based access controls.
   - Roles (`reader`, `writer`) are enforced by gRPC interceptors based on X.509 certificate extensions.
 
+
+
+Architecture Design Description
+Key Components:
+Client:
+
+Consists of:
+CLI (cmd): Provides the user interface to interact with the system.
+gRPC Client: Sends requests to the server using mTLS.
+Server:
+
+gRPC Server: Receives client requests, validates inputs, and delegates tasks to the worker library.
+Worker Library: Core module that:
+Manages job lifecycles.
+Implements resource control using cgroups.
+Captures and streams logs.
+Linux Subsystems:
+
+Process Execution: Executes jobs (e.g., Bash commands or custom scripts).
+cgroups: Enforces resource constraints (CPU, memory, disk I/O).
+File System: Stores process logs (stdout/stderr).
+Diagram Elements
+Here’s how the architecture should look:
+
+Main Blocks:
+Client:
+
+Box titled Client with two inner components:
+cmd (CLI)
+gRPC Client
+Server:
+
+Box titled Worker (Server) with three inner components:
+gRPC Server
+Worker Library
+Linux Subsystems (cgroups, process execution, and file system)
+Connections:
+
+Client communicates with Server using mTLS.
+gRPC Server calls the Worker Library to process requests.
+Worker Library interacts with:
+cgroups for resource limits.
+Process Execution to start/stop jobs.
+File System to manage logs.
+Steps to Recreate in Lucidchart
+Create Main Blocks:
+
+Use rectangles for "Client" and "Worker (Server)".
+Inside the Client block, add smaller rectangles for cmd and gRPC Client.
+Inside the Worker (Server) block, add three smaller rectangles for gRPC Server, Worker Library, and Linux Subsystems.
+Add Subsystems:
+
+Inside the Linux Subsystems block, add smaller elements for:
+cgroups
+Process Execution
+File System
+Connect Components:
+
+Draw arrows:
+From cmd (CLI) to gRPC Client (unidirectional).
+From gRPC Client to gRPC Server (unidirectional) with a label: mTLS.
+From gRPC Server to Worker Library.
+From Worker Library to each of the Linux subsystems (bidirectional):
+cgroups: For resource control.
+Process Execution: To start/stop processes.
+File System: To read/write logs.
+Styling:
+
+Use colors to distinguish components (e.g., blue for server, green for client, gray for subsystems).
+Label arrows to describe the interaction (e.g., Start Job, Stream Logs).
+Optional Enhancements
+Add icons for better visual clarity:
+Terminal icon for CLI.
+Cloud icon for the gRPC connection.
+File icon for logs.
+Would you like me to generate a visual for you, or guide you further?
