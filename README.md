@@ -1,7 +1,7 @@
-# Job Scheduler
+# A Prototype Job Service
 ## Summary
 
-Prototype job worker service that provides an API to run arbitrary Linux processes.
+A Prototype job worker service that provides an API to run arbitrary Linux processes.
 
 ## Overview
 
