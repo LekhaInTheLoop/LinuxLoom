@@ -42,18 +42,21 @@ The core library handles job lifecycle operations and ensures resource restricti
 
 **Core Structures**:
 ```go
+// / Command represents a program that will be executed with specific arguments and resource limits.
 type Command struct {
     Name           string         // Program name
     Args           []string       // Arguments for the program
     ResourceConfig *ResourceConfig // Resource limits for the job
 }
 
+// ResourceConfig holds the resource constraints for a job, such as CPU, memory, and disk I/O limits.
 type ResourceConfig struct {
     CPUQuota    string // e.g., "50%" for limiting CPU usage
     MemoryLimit string // e.g., "256M" for limiting memory usage
     DiskIO      string // e.g., "10MB/s" for I/O throttling
 }
 
+// Job represents a single job that is being executed, with associated details such as its ID, command, and resource limits.
 type Job struct {
     ID          string     // Unique job identifier
     Cmd         *exec.Cmd  // Process command
@@ -132,22 +135,32 @@ The gRPC API enables remote job management. It includes methods to start, stop, 
 
 #### **Proto Definition**:
 ```protobuf
+// ResourceConfig defines the resource limits for a job, such as CPU, memory, and disk I/O.
 message ResourceConfig {
-  string cpu_quota = 1;    // e.g., "50%"
-  string memory_limit = 2; // e.g., "512M"
-  string disk_io = 3;      // e.g., "10MB/s"
+  string cpu_quota = 1;    // CPU usage limit (e.g., "50%" means the job can use up to 50% of a CPU core)
+  string memory_limit = 2; // Memory usage limit (e.g., "512M" limits the job to 512 MB of memory)
+  string disk_io = 3;      // Disk I/O throttling (e.g., "10MB/s" limits the job to 10 MB per second for disk operations)
 }
 
+// StartRequest is used to request starting a job, with its command name, arguments, and resource configuration.
 message StartRequest {
-  string name = 1;
-  repeated string args = 2;
-  ResourceConfig resources = 3;
+  string name = 1;           // Name of the program to execute (e.g., "myProgram")
+  repeated string args = 2;  // List of arguments to pass to the program (e.g., ["arg1", "arg2"])
+  ResourceConfig resources = 3; // Resource configuration for limiting CPU, memory, and disk I/O
 }
 
+// JobService defines the service with methods to start, stop, query, and stream jobs.
 service JobService {
+  // Start starts a job with the given StartRequest and returns a StartResponse.
   rpc Start(StartRequest) returns (StartResponse);
+
+  // Stop stops a running job, given the StopRequest, and returns a StopResponse.
   rpc Stop(StopRequest) returns (StopResponse);
+
+  // Query queries the status of a job, given a QueryRequest, and returns a QueryResponse.
   rpc Query(QueryRequest) returns (QueryResponse);
+
+  // Stream streams the output of a job, given a StreamRequest, and returns a stream of StreamResponses.
   rpc Stream(StreamRequest) returns (stream StreamResponse);
 }
 ```
