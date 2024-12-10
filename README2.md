@@ -73,29 +73,42 @@ type Job struct {
 
 **Code for Cgroup Management**:
 ```go
+// CreateCgroup creates a new cgroup for a job with specific resource limits.
 func CreateCgroup(jobID string, config *ResourceConfig) (string, error) {
+    // Create a new cgroup with a unique path using the jobID
     control, err := cgroups.New(cgroups.V1, cgroups.StaticPath("/job-"+jobID), &specs.LinuxResources{
+        // Set the CPU shares (resource allocation) based on the CPU quota configuration
         CPU: &specs.LinuxCPU{
-            Shares: uint64(1024 * parseCPUQuota(config.CPUQuota)),
+            Shares: uint64(1024 * parseCPUQuota(config.CPUQuota)),  // Multiply by 1024 to adjust the CPU shares
         },
+        // Set the memory limit for the cgroup
         Memory: &specs.LinuxMemory{
-            Limit: parseMemoryLimit(config.MemoryLimit),
+            Limit: parseMemoryLimit(config.MemoryLimit),    // Parse and set the memory limit
         },
+        // Set the block IO weight for controlling disk I/O priority
         BlockIO: &specs.LinuxBlockIO{
-            Weight: parseDiskIO(config.DiskIO),
+            Weight: parseDiskIO(config.DiskIO), // Parse and set the disk I/O weight
         },
     })
+
+    // If there was an error creating the cgroup, return the error
     if err != nil {
         return "", err
     }
+
+    // Return the path of the created cgroup
     return control.Path(""), nil
 }
 
+// AttachProcessToCgroup assigns a process to a specific cgroup based on its PID.
 func AttachProcessToCgroup(cgroupPath string, pid int) error {
+// Load the cgroup at the specified path
     control, err := cgroups.Load(cgroups.V1, cgroups.StaticPath(cgroupPath))
     if err != nil {
-        return err
+        return err  // If there was an error loading the cgroup, return the error
     }
+
+    // Add the process (identified by its PID) to the cgroup
     return control.Add(cgroups.Process{Pid: pid})
 }
 ```
