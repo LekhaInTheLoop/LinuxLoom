@@ -191,10 +191,12 @@ $ job-cli stream job123
 The system ensures secure and authenticated communication between the client and server:  
 
 1. **TLS 1.3**: Provides encryption for all communication.  
-2. **Mutual Authentication**: Uses X.509 certificates to verify both client and server identities.  
+2. **Mutual Authentication**:        - Uses **X.509 certificates** to verify both client and server identities.
+   - The certificates are signed using the **sha256WithRSAEncryption** signature algorithm.
+   - **Public Key Algorithm** used for the certificate is **rsaEncryption** with an **RSA Public-Key** size of **4096 bits**, ensuring strong cryptographic security.
 3. **Role-Based Access Control (RBAC)**:  
-   - Roles (`reader`, `writer`) are embedded in certificates via X.509 extensions.  
-   - gRPC interceptors enforce role-based access to API methods.  
+   - Roles (`reader`, `writer`) are embedded in certificates via **X.509 extensions**.  
+   - Enforces role-based access using **gRPC interceptors**, which ensure that only authorized users can invoke specific API methods  
 
 ---
 
